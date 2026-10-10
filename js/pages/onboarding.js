@@ -9,7 +9,7 @@ import { html, qs, setHtml } from '../utils/dom.js';
 import { icon } from '../utils/icons.js';
 import { formatDateTime } from '../utils/format.js';
 import { initLayout, handlePageError } from '../ui/layout.js';
-import { authService } from '../services/auth-service.js';
+import { authService, ROLE_LABELS } from '../services/auth-service.js';
 import { billingService } from '../services/billing-service.js';
 import {
   lightAstraService, SERVICE_STATE_LABELS, SUBSCRIPTION_LABELS, PAYMENT_LABELS, employeeBand, planPrice, supportMailto
@@ -127,6 +127,36 @@ function noticeBlock() {
   return notice ? html`<div class="notice notice--${notice.tone}" role="status" data-onboarding-notice>${icon(notice.tone === 'ok' ? 'checkCircle' : notice.tone === 'warn' ? 'clock' : 'info')}<p>${notice.text}</p></div>` : '';
 }
 
+/** The policy module attached to this agreement, by its own title (for Cela: the Vehicle Inventory Retention Policy). */
+function retentionPolicyName(a) {
+  const first = (a.modules || [])[0];
+  return first && first.title ? first.title : '';
+}
+
+/** Agreement versions whose renewal and cancellation sections (4 and 5) the summary below was read from. A later
+    version shows no summary until someone has read it and added it here. */
+const SUMMARISED_VERSIONS = ['MASA-1.1'];
+
+/** The billing terms in plain words, next to the signature. A reading of the agreement's renewal and cancellation
+    sections (4 and 5), not an addition to them: the agreement text above is what is signed. */
+function billingSummary(o, a) {
+  if (!SUMMARISED_VERSIONS.includes(a.version)) return '';
+  const price = (a.terms && a.terms.monthlyPrice) ? `${a.terms.monthlyPrice}/month` : planPrice(o.plan);
+  return html`
+        <div class="notice" role="note" data-billing-summary>
+          ${icon('card')}
+          <div>
+            <p><strong>Month-to-month service at ${price}.</strong></p>
+            <ul class="plain-list">
+              <li>Renews automatically each month.</li>
+              <li>Cancel anytime. Cancellation takes effect at the end of the current paid billing period.</li>
+              <li>Service remains active through the period already paid for.</li>
+            </ul>
+            <p class="field__hint" data-billing-summary-note>A summary of sections 4 and 5 of the agreement above. The agreement text is what applies.</p>
+          </div>
+        </div>`;
+}
+
 /* ---------------------------------------------------------------- screens */
 
 /** Step 1 of 2 — review and sign. Nothing is pre-ticked. */
@@ -157,24 +187,36 @@ function agreementStep(o, a) {
 
       <section class="panel settings-section" aria-labelledby="sign-title">
         <header class="panel__header"><h2 id="sign-title">${icon('edit')} ${policyOnly ? 'Acknowledge' : 'Sign'}</h2></header>
+        ${policyOnly ? '' : billingSummary(o, a)}
         <form class="sign-form" data-sign-form novalidate>
           ${policyOnly ? '' : html`
+          <div class="form-grid" data-signer-fields>
+            <div class="field">
+              <label class="field__label" for="signer-first-name">First Name</label>
+              <input class="input" id="signer-first-name" name="firstName" autocomplete="given-name" maxlength="60" required aria-required="true" data-signer-first-name>
+            </div>
+            <div class="field">
+              <label class="field__label" for="signer-last-name">Last Name</label>
+              <input class="input" id="signer-last-name" name="lastName" autocomplete="family-name" maxlength="60" required aria-required="true" data-signer-last-name>
+            </div>
+            <div class="field">
+              <label class="field__label" for="signer-email">Registered Email</label>
+              <input class="input" id="signer-email" value="${authService.getCurrentUser().email || ''}" readonly aria-readonly="true" aria-describedby="signer-facts-hint" data-signer-email>
+            </div>
+            <div class="field">
+              <label class="field__label" for="signer-role">Role</label>
+              <input class="input" id="signer-role" value="${ROLE_LABELS[authService.getCurrentUser().role] || ''}" readonly aria-readonly="true" aria-describedby="signer-facts-hint" data-signer-role>
+            </div>
+            <div class="field field--wide">
+              <label class="field__label" for="signing-date">Date Signed</label>
+              <input class="input" id="signing-date" value="Set by the server when you sign" readonly aria-readonly="true" aria-describedby="signer-facts-hint" data-signing-date>
+              <p class="field__hint" id="signer-facts-hint">Enter your legal first and last name: together they are your electronic signature for ${o.clientName}. Email and role come from the account you are signed in with, and the date is set by Light Astra’s server at the moment you sign. They cannot be typed or changed here.</p>
+            </div>
+          </div>
           <label class="check check--top"><input type="checkbox" name="agree" data-agree>
             <span>I have read and agree to the Light Astra Managed App Service Agreement.</span></label>`}
           <label class="check check--top"><input type="checkbox" name="policy" data-ack-policy>
-            <span>${policyOnly ? 'I acknowledge the updated Light Astra Service Policies.' : 'I acknowledge the Privacy, Data Protection, Acceptable Use and applicable Service/Data-Retention Policies.'}</span></label>
-          ${policyOnly ? '' : html`
-          <div class="field">
-            <label class="field__label" for="legal-name">Legal Name / Electronic Signature</label>
-            <input class="input" id="legal-name" name="legalName" autocomplete="name" maxlength="120" aria-describedby="legal-name-hint">
-            <p class="field__hint" id="legal-name-hint">Typing your full legal name and choosing the button below signs the agreement electronically for ${o.clientName}.</p>
-          </div>
-          <div class="field">
-            <label class="field__label" for="signer-email">Registered Email</label>
-            <input class="input" id="signer-email" value="${authService.getCurrentUser().email || ''}" readonly aria-readonly="true" aria-describedby="signer-email-hint" data-signer-email>
-            <p class="field__hint" id="signer-email-hint">The email of the account you are signed in with. It is recorded by the server and cannot be changed here.</p>
-          </div>
-          <p class="sign-date" data-signing-date><strong>Signing Date:</strong> set by Light Astra’s server at the moment you sign.</p>`}
+            <span>${policyOnly ? 'I acknowledge the updated Light Astra Service Policies.' : `I have read and agree to the applicable Service Policies, including privacy and data protection, acceptable use, account and security requirements${retentionPolicyName(a) ? `, and the ${retentionPolicyName(a)} for ${o.clientName}` : ''}.`}</span></label>
           <p class="form-alert" data-sign-error role="alert" hidden></p>
           <div class="btn-row"><button type="submit" class="btn btn--primary" data-sign-submit>${icon('check')}${policyOnly ? 'Acknowledge & Continue' : 'Sign Agreement & Continue to Payment'}</button></div>
         </form>
@@ -344,17 +386,21 @@ async function sign(form) {
   const policyOnly = agreement.status === 'SIGNED';
   const agree = form.querySelector('[data-agree]');
   const ack = form.querySelector('[data-ack-policy]');
-  const name = form.querySelector('#legal-name');
+  const first = form.querySelector('[data-signer-first-name]');
+  const last = form.querySelector('[data-signer-last-name]');
+  // The same order as the page: names, then the two consents. The server checks all of it again.
+  if (!policyOnly && !first.value.trim()) return fail('Enter your first name to sign.', first);
+  if (!policyOnly && !last.value.trim()) return fail('Enter your last name to sign.', last);
   if (!policyOnly && !agree.checked) return fail('Tick the box to confirm that you have read and agree to the Managed App Service Agreement.', agree);
-  if (!ack.checked) return fail(policyOnly ? 'Tick the box to acknowledge the updated Service Policies.' : 'Tick the box to acknowledge the Privacy, Data Protection, Acceptable Use and applicable Service/Data-Retention Policies.', ack);
-  if (!policyOnly && name.value.trim().length < 2) return fail('Type your full legal name to sign.', name);
+  if (!ack.checked) return fail(policyOnly ? 'Tick the box to acknowledge the updated Service Policies.' : 'Tick the box to confirm that you have read and agree to the Service Policies.', ack);
+  if (submit.disabled) return undefined;                 // a second press while the first is on its way
   submit.disabled = true;
   try {
     overview = policyOnly
       ? await lightAstraService.acceptPolicy({ policyVersion: agreement.policy.version, acknowledge: ack.checked })
       : await lightAstraService.sign({
         agreementId: agreement.agreementId, sha256: agreement.sha256, policyVersion: agreement.policy.version,
-        signedName: name.value, agree: agree.checked, acknowledgePolicy: ack.checked
+        firstName: first.value, lastName: last.value, agree: agree.checked, acknowledgePolicy: ack.checked
       });
     agreement = await lightAstraService.getAgreement();
     // The signed copy is generated and recorded now, so it exists whether or not anyone opens it, and the server

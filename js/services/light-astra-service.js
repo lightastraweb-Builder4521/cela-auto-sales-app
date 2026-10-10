@@ -196,10 +196,10 @@ export const lightAstraService = {
   },
 
   /** Electronic acceptance by the signed-in Admin. The database checks everything again. */
-  async sign({ agreementId, sha256, policyVersion, signedName, agree, acknowledgePolicy }) {
+  async sign({ agreementId, sha256, policyVersion, firstName, lastName, agree, acknowledgePolicy }) {
     const { data, error } = await getSupabase().rpc('service_agreement_sign', {
       p_agreement_id: agreementId, p_agreement_sha256: sha256, p_policy_version: policyVersion,
-      p_signed_name: signedName, p_agree: agree === true, p_acknowledge_policy: acknowledgePolicy === true
+      p_first_name: firstName, p_last_name: lastName, p_agree: agree === true, p_acknowledge_policy: acknowledgePolicy === true
     });
     if (error) throw new ServiceError(describe(error, 'Couldn’t record the signature. Please try again.'));
     cache = null;
