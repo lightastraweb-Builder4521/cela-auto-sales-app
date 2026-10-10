@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Sign In | Cela Inventory Manager</title>
+  <!-- Private employee system: never index -->
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#0b0b0b">
+  <meta name="color-scheme" content="dark light">
+  <link rel="icon" type="image/png" sizes="48x48" href="images/favicon-48.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="images/icon-192.png">
+  <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+  <link rel="stylesheet" href="css/admin.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <script>(function(){var t='dark';try{var p=JSON.parse(localStorage.getItem('cela.prefs')||'{}');t=p.theme||'dark';}catch(e){}if(t==='system'){t=window.matchMedia&&matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';}document.documentElement.setAttribute('data-theme',t==='light'?'light':'dark');})();</script>
+  <script src="js/vendor/supabase.js"></script>
+  <script type="module" src="js/pages/login.js"></script>
+</head>
+<body class="auth-body">
+  <main class="auth" id="main">
+    <section class="auth__card" aria-labelledby="login-title">
+      <img class="auth__logo" src="images/cela-logo.png" width="632" height="313" alt="Cela Auto Sales LLC">
+      <p class="auth__eyebrow">Employees only</p>
+      <h1 id="login-title">Sign in to Inventory Manager</h1>
+
+      <p class="notice notice--ok" data-login-notice role="status" hidden></p>
+
+      <!-- method + onsubmit: js/pages/login.js signs in. Pressed before that script has loaded, the browser must not send the form itself. -->
+      <form class="form auth__form" method="post" onsubmit="return false" data-login-form novalidate>
+        <div class="field">
+          <label class="field__label" for="login-email">Work email</label>
+          <input class="input" type="email" id="login-email" name="email" autocomplete="username" inputmode="email" autocapitalize="off" spellcheck="false">
+        </div>
+        <div class="field">
+          <label class="field__label" for="login-password">Password</label>
+          <div class="input-row">
+            <input class="input" type="password" id="login-password" name="password" autocomplete="current-password">
+            <button type="button" class="btn btn--ghost" data-toggle-password aria-pressed="false" aria-controls="login-password"><span>Show</span><span class="visually-hidden"> password</span></button>
+          </div>
+        </div>
+        <label class="check auth__remember"><input type="checkbox" id="login-remember" name="remember"><span>Remember me</span></label>
+        <p class="form-alert" data-login-error role="alert" hidden></p>
+        <button type="submit" class="btn btn--primary btn--lg btn--block">Sign In</button>
+        <p class="auth__aside"><button type="button" class="auth__link" data-forgot-open>Forgot password?</button></p>
+      </form>
+
+      <form class="form auth__form" data-forgot-form novalidate hidden aria-labelledby="forgot-title">
+        <h2 class="auth__subtitle" id="forgot-title">Reset your password</h2>
+        <p class="auth__hint">Enter your work email. If it belongs to an employee account, we’ll email a secure link to choose a new password.</p>
+        <div class="field">
+          <label class="field__label" for="forgot-email">Work email</label>
+          <input class="input" type="email" id="forgot-email" name="email" autocomplete="username" inputmode="email" autocapitalize="off" spellcheck="false">
+        </div>
+        <p class="form-alert" data-forgot-error role="alert" hidden></p>
+        <p class="notice notice--ok" data-forgot-done role="status" hidden>If an employee account uses that email, a reset link is on its way. It works once and expires in 1 hour. Check your spam folder if it doesn’t arrive within a few minutes.</p>
+        <button type="submit" class="btn btn--primary btn--lg btn--block" data-forgot-submit>Send Reset Link</button>
+        <p class="auth__aside"><button type="button" class="auth__link" data-forgot-cancel>Back to sign in</button></p>
+      </form>
+
+      <div class="dev-login" data-dev-login-box aria-labelledby="dev-login-title" hidden>
+        <p class="dev-login__badge" id="dev-login-title">Development mode</p>
+        <p>Local development mode. This sign-in is for offline testing only — it is <strong>not secure</strong> and is disabled whenever the app is connected to Supabase.</p>
+        <div class="dev-login__buttons">
+          <button type="button" class="btn btn--dark btn--block" data-dev-login="dev-admin">Continue as Dev Admin</button>
+          <button type="button" class="btn btn--dark btn--block" data-dev-login="dev-employee">Continue as Dev Employee</button>
+        </div>
+      </div>
+    </section>
+    <p class="auth__foot">Cela Auto Sales LLC · Private employee system</p>
+  </main>
+  <noscript><p class="noscript">The Cela Inventory Manager needs JavaScript. Please enable it and reload.</p></noscript>
+</body>
+</html>

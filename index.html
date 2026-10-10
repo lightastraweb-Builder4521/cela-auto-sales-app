@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Loading | Cela Inventory Manager</title>
+  <!-- Private employee system: never index -->
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#0b0b0b">
+  <meta name="color-scheme" content="dark light">
+  <link rel="icon" type="image/png" sizes="48x48" href="images/favicon-48.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="images/icon-192.png">
+  <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+  <link rel="stylesheet" href="css/admin.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <script>(function(){var t='dark';try{var p=JSON.parse(localStorage.getItem('cela.prefs')||'{}');t=p.theme||'dark';}catch(e){}if(t==='system'){t=window.matchMedia&&matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';}document.documentElement.setAttribute('data-theme',t==='light'?'light':'dark');})();</script>
+  <script src="js/vendor/supabase.js"></script>
+  <script type="module" src="js/pages/index.js"></script>
+</head>
+<body class="auth-body">
+  <main class="auth" id="main">
+    <p class="page-loading" role="status"><span class="spinner" aria-hidden="true"></span>Opening Inventory Manager… <a href="login.html">Continue</a></p>
+  </main>
+</body>
+</html>

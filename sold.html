@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en" class="is-booting">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Sold Vehicles | Cela Inventory Manager</title>
+  <!-- Private employee system: never index -->
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#0b0b0b">
+  <meta name="color-scheme" content="dark light">
+  <link rel="icon" type="image/png" sizes="48x48" href="images/favicon-48.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="images/icon-192.png">
+  <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+  <link rel="stylesheet" href="css/admin.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <script>(function(){var t='dark';try{var p=JSON.parse(localStorage.getItem('cela.prefs')||'{}');t=p.theme||'dark';}catch(e){}if(t==='system'){t=window.matchMedia&&matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';}document.documentElement.setAttribute('data-theme',t==='light'?'light':'dark');})();</script>
+  <script src="js/vendor/supabase.js"></script>
+  <script type="module" src="js/pages/sold.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <div class="app">
+    <aside class="sidebar" id="sidebar" data-sidebar aria-label="Sidebar"></aside>
+    <div class="sidebar-backdrop" data-sidebar-backdrop hidden></div>
+    <div class="app__main">
+      <header class="topbar" data-topbar></header>
+      <main id="main" class="page" tabindex="-1">
+        <div class="page__inner"><p class="page-loading" role="status"><span class="spinner" aria-hidden="true"></span>Loading…</p></div>
+      </main>
+    </div>
+  </div>
+  <noscript><p class="noscript">The Cela Inventory Manager needs JavaScript. Please enable it and reload.</p></noscript>
+</body>
+</html>

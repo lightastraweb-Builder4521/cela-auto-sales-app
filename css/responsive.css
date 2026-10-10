@@ -1,0 +1,122 @@
+/* ==========================================================================
+   Cela Inventory Manager — responsive.css
+   Breakpoints: 480 · 640 · 760 · 1024 (permanent sidebar) · 1280 · 1600
+   ========================================================================== */
+
+@media (max-width: 359px) {
+  .topbar__inner { gap: 0.35rem; }
+  .topbar__brand img { height: 30px; }
+  .detail-actions { grid-template-columns: 1fr; }
+  .field-pair { grid-template-columns: 1fr; }
+}
+
+@media (min-width: 480px) {
+  .quick-actions { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .quick-action { flex-direction: column; align-items: flex-start; justify-content: center; min-height: 76px; }
+  .dev-pill span { display: inline; }
+  .dropzone__btn { width: auto; }
+  .save-bar__buttons [data-cancel] { display: inline-flex; }
+}
+
+@media (min-width: 640px) {
+  .form-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .form-grid .field--wide { grid-column: 1 / -1; }
+  .stats { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .topbar__add span { display: inline; }
+  .topbar__add { padding-inline: 1rem; }
+  .detail-actions { display: flex; flex-wrap: wrap; }
+  .form-section, .panel { padding: 1.25rem; }
+  .toasts { left: auto; right: 1rem; bottom: 1rem; width: min(420px, calc(100vw - 2rem)); }
+  .save-bar__preview { display: inline-flex; }
+  .save-bar__buttons .btn { flex: 0 0 auto; }
+  .save-bar { grid-template-columns: 1fr auto; align-items: center; }
+  .roles { grid-template-columns: 1fr 1fr; }
+  .sys-row { grid-template-columns: 11rem 1fr; align-items: baseline; }
+  .auth__card { padding: 2rem 2rem 1.75rem; }
+  .pp { grid-template-columns: minmax(0, 340px) minmax(0, 1fr); align-items: start; }
+}
+
+@media (min-width: 1100px) {
+  .view-toggle { display: inline-flex; }
+}
+
+@media (min-width: 760px) {
+  .toolbar { grid-template-columns: minmax(0, 1fr) auto; align-items: center; }
+  .toolbar__sort { flex: 0 0 auto; width: auto; }
+  .kv--2col { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 1.5rem; }
+  .kv--2col > div:nth-last-child(2):nth-child(odd) { border-bottom: 0; }
+  .pp-detail { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); }
+  .pp-detail .pp-block { grid-column: 1 / -1; }
+}
+
+/* Inventory table: least-needed columns appear only when there's room.
+   (Below 1100px the inventory uses the card grid.) */
+@media (max-width: 1599px) { .table .col-vin { display: none; } }
+@media (max-width: 1399px) {
+  .table .col-updated { display: none; }
+  .switch__text { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+}
+@media (max-width: 1279px) {
+  .table .col-stock { display: none; }
+  .table--inventory .vname__stock { display: inline; }
+}
+
+/* Permanent sidebar */
+@media (min-width: 1024px) {
+  .sidebar {
+    width: var(--sidebar-w);
+    transform: none;
+    visibility: visible;
+    transition: none;
+  }
+  .sidebar__close, .sidebar-backdrop, .topbar__menu, .topbar__brand, .topbar__search-btn { display: none !important; }
+  .app__main { margin-left: var(--sidebar-w); }
+  .topbar__search { display: block; position: relative; flex: 1; max-width: 520px; margin-right: auto; }
+  .topbar__search .icon { position: absolute; top: 50%; left: 0.8rem; width: 1.05rem; height: 1.05rem; transform: translateY(-50%); color: var(--chrome-muted); pointer-events: none; }
+  .topbar__search .input {
+    min-height: 40px;
+    padding-left: 2.3rem;
+    border-color: var(--chrome-border);
+    background: var(--chrome-2);
+    color: #fff;
+  }
+  .topbar__search .input::placeholder { color: #8a8a8a; }
+  .user-btn__name, .user-btn > .icon { display: inline; }
+  .user-btn { padding-right: 0.75rem; }
+  .detail-header { grid-template-columns: minmax(0, 1fr) auto; align-items: end; }
+  .detail-actions { justify-content: flex-end; max-width: 560px; }
+  .save-bar { margin-inline: 0; border: 1px solid var(--border-strong); border-radius: var(--radius-lg); bottom: 0.75rem; }
+  .dash-grid { grid-template-columns: minmax(0, 1.5fr) minmax(300px, 1fr); align-items: start; }
+}
+
+@media (min-width: 1100px) {
+  .detail-grid { grid-template-columns: minmax(0, 1fr) 360px; align-items: start; }
+  .detail-side { position: sticky; top: calc(var(--topbar-h) + 1rem); }
+}
+
+@media (min-width: 1280px) {
+  .form-layout { grid-template-columns: 210px minmax(0, 1fr); align-items: start; }
+  .form-nav { display: block; position: sticky; top: calc(var(--topbar-h) + 1rem); }
+  .form-nav ol { list-style: none; display: grid; gap: 0.15rem; }
+  .form-nav a {
+    display: flex; align-items: center; gap: 0.6rem;
+    min-height: 40px;
+    padding: 0.35rem 0.6rem;
+    border-radius: var(--radius-sm);
+    color: var(--muted);
+    font-weight: 650;
+    text-decoration: none;
+  }
+  .form-nav a:hover { background: var(--surface); color: var(--heading); }
+  .form-nav__dot { width: 8px; height: 8px; border-radius: 50%; background: var(--border-strong); }
+  .page__inner--form { max-width: 1240px; }
+}
+
+@media (min-width: 1600px) {
+  .page__inner { padding-top: 1.75rem; }
+}
+
+@media print {
+  .sidebar, .topbar, .save-bar, .toasts, .detail-actions { display: none !important; }
+  .app__main { margin: 0 !important; }
+}
