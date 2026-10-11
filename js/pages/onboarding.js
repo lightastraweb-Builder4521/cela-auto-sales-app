@@ -134,8 +134,9 @@ function retentionPolicyName(a) {
 }
 
 /** Agreement versions whose renewal and cancellation sections (4 and 5) the summary below was read from. A later
-    version shows no summary until someone has read it and added it here. */
-const SUMMARISED_VERSIONS = ['MASA-1.1'];
+    version shows no summary until someone has read it and added it here. MASA-1.2 is MASA-1.1 with the status
+    wording of section 20 taken out: sections 4 and 5 are the same text. */
+const SUMMARISED_VERSIONS = ['MASA-1.1', 'MASA-1.2'];
 
 /** The billing terms in plain words, next to the signature. A reading of the agreement's renewal and cancellation
     sections (4 and 5), not an addition to them: the agreement text above is what is signed. */

@@ -156,7 +156,6 @@ export const lightAstraService = {
       signedRole: a.signed_role || null,
       clientId: a.client_id, projectId: a.project_id,
       termsCurrent: a.terms_current !== false,          // false: the plan changed; Light Astra issues an updated agreement
-      legalReviewStatus: a.legal_review_status || 'REQUIRES_LEGAL_REVIEW',
       // What the agreement was issued with (older agreements have no such record): names, plan, price as shown.
       terms: a.terms ? {
         clientName: a.terms.client_legal_name || a.terms.client_name, projectName: a.terms.project_name,
